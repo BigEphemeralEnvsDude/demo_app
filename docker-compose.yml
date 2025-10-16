@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+
+  server:
+    build: server/
+    command: /usr/app/node_modules/.bin/nodemon src/index.js
+    ports:
+      - "8080:8080"
+    # env_file: ./server/.env # TODO - uncomment this to auto-load your .env file!
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+
+  client:
+    labels:
+      shipyard.route: '/'
+    build: client/
+    command: npm start
+    environment:
+      - DANGEROUSLY_DISABLE_HOST_CHECK=true
+    depends_on:
+      - server
+    ports:
+      - "3000:3000"
